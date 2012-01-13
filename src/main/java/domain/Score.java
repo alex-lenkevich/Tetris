@@ -11,7 +11,9 @@ import com.google.inject.ImplementedBy;
 public interface Score {
 
     void figureDrop(int lineRemoveCount);
+
     int getScore();
+
     int getLines();
 
 }

@@ -10,4 +10,6 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(SimpleCleaner.class)
 public interface Cleaner {
     int clear(Area area);
+
+    void removeLine(Area area, int i);
 }

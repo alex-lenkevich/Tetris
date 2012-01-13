@@ -1,6 +1,7 @@
 package domain;
 
 import org.testng.annotations.Test;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -16,7 +17,7 @@ public class CleanerTests {
     @Test
     public void testFilledRow() throws Exception {
         Cleaner cleaner = new SimpleCleaner();
-        Area area = new SimpleArea();
+        Area area = provideArea();
         area.add(new Figure(FigureType.P, new Point(4, 0), FigureOrient.UP));
         area.add(new Figure(FigureType.P, new Point(3, 0), FigureOrient.UP));
         for(int i = 0 ; i < 10 ; i ++){
@@ -48,14 +49,16 @@ public class CleanerTests {
     @Test
     public void test2() throws Exception {
         Cleaner cleaner = new SimpleCleaner();
-        Area area = new SimpleArea();
+        Area area = provideArea();
         initArea(area,  new int[][]{
                 {1,0,0,1,0,0,1,1,1,1},
                 {1,1,1,1,1,1,1,1,1,1},
                 {1,1,0,0,1,0,0,1,1,1}
         });
-
+        System.out.println(area);
+        System.out.println("&&&&&&&&&&&&&&&&&&");
         cleaner.clear(area);
+        System.out.println(area);
         testArea(area, new int[][]{
                 {1,0,0,1,0,0,1,1,1,1},
                 {1,1,0,0,1,0,0,1,1,1}
@@ -76,7 +79,7 @@ public class CleanerTests {
         });
 
     }
-    
+
     public static void initArea(domain.Area area, int[][] points){
         for(int x = 0 ; x < points.length ; x++){
             for(int y = 0 ; y < points[x].length ; y++){
@@ -88,7 +91,7 @@ public class CleanerTests {
     }
 
     private void testArea(Area area, int[][] points){
-        for(int x = 0 ; x < points.length ; x++){
+        for(int x = 0 ; x <points.length ; x++){
             for(int y = 0 ; y < points[x].length ; y++){
                 if(points[x][y] != 0){
                     assertTrue(area.contains(new Point(y, x)), x + ":" + y);
@@ -98,6 +101,19 @@ public class CleanerTests {
             }
         }
     }
-    
-    
+
+    private SimpleArea provideArea() {
+        return new SimpleArea(){
+            @Override
+            public int getWidth() {
+                return 10;
+            }
+
+            @Override
+            public int getHeight() {
+                return 10;
+            }
+        };
+    }
+
 }

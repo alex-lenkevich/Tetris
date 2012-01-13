@@ -18,8 +18,5 @@ public class FigureGenTests {
         FigureGen figureGen = new SimpleFigureGen();
         figureGen.genNewFigure(area);
         assertNotNull(area.getActive());
-        assertEquals(area.getActive().getPosition(), new Point(area.getWidth() / 2, area.getHeight()));
-
-
     }
 }

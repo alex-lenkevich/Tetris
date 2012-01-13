@@ -11,6 +11,8 @@ import com.google.inject.ImplementedBy;
 public interface Player {
 
     void start();
+
     void update();
 
+    void gameOver();
 }

@@ -1,6 +1,7 @@
 package domain;
 
-import java.util.Collections;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -16,27 +17,35 @@ public class SimpleCleaner implements Cleaner {
         int c = 0;
         for (int y = 0; y < area.getHeight(); y++) {
             boolean cleanNeeded = true;
-            for (int x = 0; x < area.getHeight(); x++) {
+            for (int x = 0; x < area.getWidth(); x++) {
                 if (!area.contains(new Point(x, y))) {
                     cleanNeeded = false;
                 }
             }
             if (cleanNeeded) {
-                Iterator<Figure> iterator = area.getFigures().iterator();
-                Set<Figure> set = new HashSet<Figure>();
-                while (iterator.hasNext()) {
-                    Figure figure = iterator.next();
-                    if (figure.getPosition().y != y) {
-                        set.add(figure);
-                    }
-                }
-                area.getFigures().clear();
-                area.getFigures().addAll(set);
+                removeLine(area, y);
                 c++;
                 y--;
-
             }
         }
+        return c;
+    }
+
+    public void removeLine(Area area, int i){
+        Iterator<Figure> iterator = area.getFigures().iterator();
+        Set<Figure> set = new HashSet<Figure>();
+        while (iterator.hasNext()) {
+            Figure figure = iterator.next();
+            if (figure.getPosition().y != i) {
+                set.add(figure);
+            }
+        }
+        area.getFigures().clear();
+        area.getFigures().addAll(set);
+        trim(area);
+    }
+
+    public void trim(Area area){
         for (int y = 0; y < area.getHeight(); y++) {
             boolean isEmpty = true;
             for (int x = 0; x < area.getWidth(); x++) {
@@ -52,12 +61,8 @@ public class SimpleCleaner implements Cleaner {
                         moved = true;
                     }
                 }
-
                 if (moved) y--;
-
             }
         }
-
-        return c;
     }
 }

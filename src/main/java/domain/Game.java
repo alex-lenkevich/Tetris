@@ -2,7 +2,7 @@ package domain;
 
 import com.google.inject.Inject;
 
-import java.io.StreamCorruptedException;
+import java.util.List;
 
 /**
  * User: alexander.lenkevich
@@ -18,23 +18,15 @@ public class Game {
     private GameOverChecker gameOverChecker;
     private FigureGen figureGen;
     private Score score;
+    private Scheduler scheduler;
+    private AreaInitializer areaInitializer;
 
     public void start() {
+        areaInitializer.init(area);
         figureGen.genNewFigure(area);
+        scheduler.start();
         player.start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!gameOverChecker.isEnd(area)) {
-                    try {
-                        Thread.sleep(600);
-                        fall();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
+
     }
 
     public void moveLeft() {
@@ -58,7 +50,7 @@ public class Game {
     }
 
     public void drop() {
-        while (moveDown());
+        while (moveDown()) ;
         player.update();
     }
 
@@ -72,8 +64,35 @@ public class Game {
         return free;
     }
 
-    public Figure getNextFigure(){
+    public List<Figure> getNextFigure() {
         return figureGen.getNext();
+    }
+
+    public void pause(){
+        scheduler.setPause(true);
+        player.update();
+    }
+
+    public void unPause(){
+        scheduler.setPause(false);
+        player.update();
+    }
+
+    public void switchPause(){
+        if(scheduler.isPause()){
+            unPause();
+        } else {
+            pause();
+        }
+    }
+
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
+
+    @Inject
+    public void setScheduler(Scheduler scheduler) {
+        this.scheduler = scheduler;
     }
 
     @Inject
@@ -139,6 +158,42 @@ public class Game {
         this.figureGen = figureGen;
     }
 
+    public AreaInitializer getAreaInitializer() {
+        return areaInitializer;
+    }
+
+    @Inject
+    public void setAreaInitializer(AreaInitializer areaInitializer) {
+        this.areaInitializer = areaInitializer;
+    }
+
+    public void gameOver() {
+        scheduler.isPause();
+        player.gameOver();
+    }
+
+    public boolean isGameOver() {
+        return gameOverChecker.isEnd(area);
+    }
+
+    public boolean isPause() {
+        return !isGameOver() && scheduler.isPause();
+
+    }
+
+    public void removeBottomLine() {
+        cleaner.removeLine(area, 0);
+        player.update();
+    }
+
+    public void upSpeed(){
+        scheduler.setSpeed(scheduler.getSpeed() + 1);
+    }
+
+    public void downSpeed(){
+        if(scheduler.getSpeed() == 0) return;
+        scheduler.setSpeed(scheduler.getSpeed() - 1);
+    }
 
 
 }

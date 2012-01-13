@@ -2,6 +2,7 @@ package domain;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -19,6 +20,7 @@ public class SimpleArea implements Area {
 
     private Set<Figure> figures = new HashSet<Figure>();
     private Figure active;
+    private int width = 40, height = 40;
 
     @Override
     public void add(Figure figure) {
@@ -44,15 +46,7 @@ public class SimpleArea implements Area {
         return figures.remove(figure);
     }
 
-    @Override
-    public int getWidth() {
-        return 10;
-    }
-
-    @Override
-    public int getHeight() {
-        return 20;
-    }
+    
 
     @Override
     public Color getColorAt(final Point point) {
@@ -73,6 +67,26 @@ public class SimpleArea implements Area {
     @Override
     public Figure getActive() {
         return active;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     @Override

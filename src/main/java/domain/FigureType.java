@@ -2,7 +2,6 @@ package domain;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.*;
 import java.util.List;
@@ -143,6 +142,7 @@ public enum FigureType {
     };
 
     public abstract ImmutableSet<Point> getPoints();
+
     public abstract Color getDefaultColor();
 
     public Point getRightBottomCorner() {

@@ -2,7 +2,6 @@ package domain;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nullable;
 

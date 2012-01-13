@@ -29,6 +29,10 @@ public interface Area {
 
     int getHeight();
 
+    void setWidth(int w);
+
+    void setHeight(int h);
+
     Color getColorAt(Point point);
 
 }
