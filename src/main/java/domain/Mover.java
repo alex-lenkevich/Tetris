@@ -18,4 +18,7 @@ public interface Mover {
     void freeze(Area area);
 
     boolean rotate(Area area);
+
+    Figure getDropFigureForecast(final Area area);
+
 }

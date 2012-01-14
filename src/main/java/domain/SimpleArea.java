@@ -20,7 +20,7 @@ public class SimpleArea implements Area {
 
     private Set<Figure> figures = new HashSet<Figure>();
     private Figure active;
-    private int width = 40, height = 40;
+    private int width = 6, height = 20;
 
     @Override
     public void add(Figure figure) {

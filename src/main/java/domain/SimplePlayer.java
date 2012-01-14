@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.NumberFormat;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ import static java.awt.event.KeyEvent.*;
  */
 public class SimplePlayer extends JFrame implements Player {
 
-    public static final int SIZE = 15;
+    public static final int SIZE = 30;
     public static final int MINI_SIZE = 5;
     public static final int SCORE_HEIGHT = 80;
 
@@ -75,6 +76,24 @@ public class SimplePlayer extends JFrame implements Player {
                 g.setColor(area.getActive().getColor());
                 int realY = area.getHeight() - point.y - 1;
                 g.fillRect(point.x * SIZE, realY * SIZE, SIZE, SIZE);
+            }
+            Collection<Point> forecastPoints = game.getMover().getDropFigureForecast(area).getPoints();
+            for (Point point : forecastPoints) {
+                g.setColor(new Color(0x00DD00));
+                int realY = area.getHeight() - point.y - 1;
+                if(!forecastPoints.contains(point.minus(new Point(1, 0)))){ // left
+                    g.drawLine((point.x) * SIZE, (realY) * SIZE, (point.x) * SIZE, (realY + 1) * SIZE);
+                }
+                if(!forecastPoints.contains(point.minus(new Point(0, 1)))){ // bottom
+                    g.drawLine(point.x * SIZE, (realY + 1) * SIZE, (point.x + 1) * SIZE, (realY + 1) * SIZE);
+                }
+                if(!forecastPoints.contains(point.plus(new Point(0, 1)))){ // top
+                    g.drawLine(point.x * SIZE, (realY) * SIZE, (point.x + 1) * SIZE, (realY) * SIZE);
+                }
+                if(!forecastPoints.contains(point.plus(new Point(1, 0)))){ // right
+                    g.drawLine((point.x + 1) * SIZE, (realY) * SIZE, (point.x + 1) * SIZE, (realY + 1) * SIZE);
+                }
+
             }
             if (game.isPause()) {
                 paintText(g, "PAUSE");

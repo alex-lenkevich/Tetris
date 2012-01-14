@@ -79,4 +79,14 @@ public class SimpleMover implements Mover {
         return false;
     }
 
+    public Figure getDropFigureForecast(final Area area){
+        Figure active = area.getActive();
+        Figure forecast = active.clone();
+        Point newPosition;
+        do {
+             newPosition = forecast.getPosition().minus(new Point(0, 1));
+        } while (getMovePossibilityAndMove(area, forecast, newPosition));
+        return forecast;
+    }
+
 }

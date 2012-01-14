@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Date: 1/10/12
  * Time: 6:19 PM
  */
-public class Figure {
+public class Figure implements Cloneable {
 
     private FigureType type;
     private FigureOrient orient;
@@ -137,5 +137,10 @@ public class Figure {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    @Override
+    protected Figure clone() {
+        return new Figure(type, position, orient, color);
     }
 }

@@ -7,7 +7,7 @@ import com.google.inject.ImplementedBy;
  * Date: 1/13/12
  * Time: 6:55 PM
  */
-@ImplementedBy(OksanaImageAreaInitializer.class)
+@ImplementedBy(EmptyAreaInitializer.class)
 public interface AreaInitializer {
     void init(Area area);
 }
