@@ -1,6 +1,7 @@
 package domain;
 
 import com.google.inject.ImplementedBy;
+import domainimpl.SimpleCleaner;
 
 /**
  * User: alexander.lenkevich

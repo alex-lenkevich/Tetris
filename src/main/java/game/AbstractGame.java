@@ -1,25 +1,26 @@
-package domain;
+package game;
 
 import com.google.inject.Inject;
+import domain.*;
 
 import java.util.List;
 
 /**
  * User: alexander.lenkevich
- * Date: 1/12/12
- * Time: 12:08 PM
+ * Date: 1/16/12
+ * Time: 11:26 AM
  */
-public class Game {
+public class AbstractGame {
 
-    private Player player;
-    private Area area;
-    private Cleaner cleaner;
-    private Mover mover;
-    private GameOverChecker gameOverChecker;
-    private FigureGen figureGen;
-    private Score score;
-    private Scheduler scheduler;
-    private AreaInitializer areaInitializer;
+    protected Player player;
+    protected Area area;
+    protected Cleaner cleaner;
+    protected Mover mover;
+    protected GameOverChecker gameOverChecker;
+    protected FigureGen figureGen;
+    protected Score score;
+    protected Scheduler scheduler;
+    protected AreaInitializer areaInitializer;
 
     public void start() {
         areaInitializer.init(area);
@@ -29,28 +30,29 @@ public class Game {
 
     }
 
-    public void moveLeft() {
-        mover.moveLeft(area);
+    public void moveEast() {
+        mover.moveEast(area);
         player.update();
     }
 
-    public void moveRight() {
-        mover.moveRight(area);
-        player.update();
-    }
-
-    public void rotate() {
-        mover.rotate(area);
+    public void moveWest() {
+        mover.moveWest(area);
         player.update();
     }
 
     public void fall() {
-        boolean free = moveDown();
+        moveDown();
         player.update();
     }
 
     public void drop() {
         while (moveDown()) ;
+        player.update();
+    }
+
+    public void move(Axis axis, Direction direction) {
+        if(axis == Axis.Y && direction.isForward()) return;
+        mover.move(area, axis, direction);
         player.update();
     }
 
@@ -84,6 +86,38 @@ public class Game {
         } else {
             pause();
         }
+    }
+
+    public void gameOver() {
+        player.gameOver();
+    }
+
+    public boolean isGameOver() {
+        return gameOverChecker.isEnd(area);
+    }
+
+    public boolean isPause() {
+        return !isGameOver() && scheduler.isPause();
+
+    }
+
+    public void removeBottomArray() {
+        cleaner.removeLine(area, 0);
+        player.update();
+    }
+
+    public void upSpeed(){
+        scheduler.setSpeed(scheduler.getSpeed() + 1);
+    }
+
+    public void downSpeed(){
+        if(scheduler.getSpeed() == 0) return;
+        scheduler.setSpeed(scheduler.getSpeed() - 1);
+    }
+
+    public void rotate(Axis axis, Direction direction) {
+        mover.rotate(area, axis, direction);
+        player.update();
     }
 
     public Scheduler getScheduler() {
@@ -166,34 +200,5 @@ public class Game {
     public void setAreaInitializer(AreaInitializer areaInitializer) {
         this.areaInitializer = areaInitializer;
     }
-
-    public void gameOver() {
-        scheduler.isPause();
-        player.gameOver();
-    }
-
-    public boolean isGameOver() {
-        return gameOverChecker.isEnd(area);
-    }
-
-    public boolean isPause() {
-        return !isGameOver() && scheduler.isPause();
-
-    }
-
-    public void removeBottomLine() {
-        cleaner.removeLine(area, 0);
-        player.update();
-    }
-
-    public void upSpeed(){
-        scheduler.setSpeed(scheduler.getSpeed() + 1);
-    }
-
-    public void downSpeed(){
-        if(scheduler.getSpeed() == 0) return;
-        scheduler.setSpeed(scheduler.getSpeed() - 1);
-    }
-
 
 }

@@ -1,7 +1,9 @@
-package domain;
+package domainimpl;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+import domain.*;
 
 import javax.annotation.Nullable;
 
@@ -15,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class SimpleMover implements Mover {
 
     @Override
-    public boolean moveLeft(final Area area) {
+    public boolean moveEast(final Area area) {
         checkNotNull(area);
         Figure figure = area.getActive();
         Point newPosition = figure.getPosition().minus(new Point(1, 0));
@@ -24,7 +26,7 @@ public class SimpleMover implements Mover {
 
 
     @Override
-    public boolean moveRight(Area area) {
+    public boolean moveWest(Area area) {
         checkNotNull(area);
         Figure figure = area.getActive();
         Point newPosition = figure.getPosition().plus(new Point(1, 0));
@@ -43,27 +45,27 @@ public class SimpleMover implements Mover {
     @Override
     public void freeze(Area area) {
         for (Point p : area.getActive().getPoints()) {
-            area.add(new Figure(FigureType.P, p, FigureOrient.UP, area.getActive().getColor()));
+            area.add(new Figure(FigureType.P, p, area.getActive().getColor()));
         }
     }
 
     @Override
-    public boolean rotate(Area area) {
+    public boolean rotate(Area area, Axis axis, Direction direction) {
         Figure figure = area.getActive();
-        FigureOrient newOrient = figure.getOrient().getNext();
-        return getMovePossibilityAndMove(area, figure, newOrient);
+        Projection newProjection = figure.getProjection().rotate(axis, direction);
+        return getMovePossibilityAndMove(area, figure, newProjection);
     }
 
     private boolean getMovePossibilityAndMove(final Area area, Figure figure, Point newPosition) {
-        return getMovePossibilityAndMove(area, figure, newPosition, figure.getOrient());
+        return getMovePossibilityAndMove(area, figure, newPosition, figure.getProjection());
     }
 
-    private boolean getMovePossibilityAndMove(final Area area, Figure figure, FigureOrient newOrient) {
-        return getMovePossibilityAndMove(area, figure, figure.getPosition(), newOrient);
+    private boolean getMovePossibilityAndMove(final Area area, Figure figure, Projection newProjection) {
+        return getMovePossibilityAndMove(area, figure, figure.getPosition(), newProjection);
     }
 
 
-    private boolean getMovePossibilityAndMove(final Area area, Figure figure, Point newPosition, FigureOrient newOrient) {
+    private boolean getMovePossibilityAndMove(final Area area, Figure figure, Point newPosition, Projection newOrient) {
         Figure newFigure = new Figure(figure.getType(), newPosition, newOrient);
 
         if (Iterables.all(newFigure.getPoints(), new Predicate<Point>() {
@@ -73,7 +75,7 @@ public class SimpleMover implements Mover {
             }
         })) {
             figure.setPosition(newPosition);
-            figure.setOrient(newOrient);
+            figure.setProjection(newOrient);
             return true;
         }
         return false;
@@ -87,6 +89,15 @@ public class SimpleMover implements Mover {
              newPosition = forecast.getPosition().minus(new Point(0, 1));
         } while (getMovePossibilityAndMove(area, forecast, newPosition));
         return forecast;
+    }
+
+    @Override
+    public boolean move(final Area area, Axis axis, Direction direction) {
+        checkNotNull(area);
+        Figure figure = area.getActive();
+        checkNotNull(figure);
+        Point newPosition = figure.getPosition().plus(new Point(ImmutableMap.of(axis, (direction.isForward() ? 1 : -1))));
+        return getMovePossibilityAndMove(area, figure, newPosition);
     }
 
 }

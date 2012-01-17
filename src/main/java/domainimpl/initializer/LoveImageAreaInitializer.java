@@ -1,4 +1,4 @@
-package domain;
+package domainimpl.initializer;
 
 /**
  * User: alexander.lenkevich

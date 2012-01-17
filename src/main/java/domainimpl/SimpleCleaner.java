@@ -1,6 +1,6 @@
-package domain;
+package domainimpl;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import domain.*;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,9 +15,9 @@ public class SimpleCleaner implements Cleaner {
     @Override
     public int clear(final Area area) {
         int c = 0;
-        for (int y = 0; y < area.getHeight(); y++) {
+        for (int y = 0; y < area.getSize(Axis.Y); y++) {
             boolean cleanNeeded = true;
-            for (int x = 0; x < area.getWidth(); x++) {
+            for (int x = 0; x < area.getSize(Axis.X); x++) {
                 if (!area.contains(new Point(x, y))) {
                     cleanNeeded = false;
                 }
@@ -46,11 +46,13 @@ public class SimpleCleaner implements Cleaner {
     }
 
     public void trim(Area area){
-        for (int y = 0; y < area.getHeight(); y++) {
+        for (int y = 0; y < area.getSize(Axis.Y); y++) {
             boolean isEmpty = true;
-            for (int x = 0; x < area.getWidth(); x++) {
-                if (area.contains(new Point(x, y))) {
-                    isEmpty = false;
+            for (int x = 0; x < area.getSize(Axis.X); x++) {
+                for (int z = 0; z < area.getSize(Axis.Z); z++) {
+                    if (area.contains(new Point(x, y, z))) {
+                        isEmpty = false;
+                    }
                 }
             }
             if (isEmpty) {

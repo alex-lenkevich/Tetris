@@ -1,6 +1,7 @@
 package domain;
 
 import com.google.inject.Inject;
+import game.Game2D;
 
 /**
  * User: alexander.lenkevich
@@ -9,22 +10,22 @@ import com.google.inject.Inject;
  */
 public class Scheduler extends Thread {
 
-    Game game;
+    Game2D game2D;
     private boolean pause;
     private int speed = 0;
 
     public void run() {
-        while (!game.getGameOverChecker().isEnd(game.getArea())) {
+        while (!game2D.getGameOverChecker().isEnd(game2D.getArea())) {
             try {
                 Thread.sleep(500 / (speed + 1));
                 if (!pause) {
-                    game.fall();
+                    game2D.fall();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        game.gameOver();
+        game2D.gameOver();
     }
 
     public boolean isPause() {
@@ -35,20 +36,19 @@ public class Scheduler extends Thread {
         this.pause = pause;
     }
 
-    int getSpeed() {
+    public int getSpeed() {
         return speed;
     }
 
-    void setSpeed(int speed){
-        if(speed < 0) throw new IllegalArgumentException("speed must by grate then 0");
+    public void setSpeed(int speed) {
+        if (speed < 0) throw new IllegalArgumentException("speed must by grate then 0");
         this.speed = speed;
     }
 
     @Inject
-    public void setGame(Game game) {
-        this.game = game;
+    public void setGame2D(Game2D game2D) {
+        this.game2D = game2D;
     }
-
 
 
 }

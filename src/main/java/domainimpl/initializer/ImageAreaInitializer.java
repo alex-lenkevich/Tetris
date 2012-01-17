@@ -1,6 +1,7 @@
-package domain;
+package domainimpl.initializer;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import domain.*;
+import domain.Point;
 
 import java.awt.*;
 
@@ -25,13 +26,13 @@ public class ImageAreaInitializer implements AreaInitializer {
                     int ry = initData.length - y - 1;
                     Color color;
                     if(initData[y][x] == 1){
-                        int number = (int) Math.round(Math.random() * (FigureType.getFiguresToGen().size() - 1));
-                        FigureType figureType = FigureType.getFiguresToGen().get(number);
+                        int number = (int) Math.round(Math.random() * (FigureType.getFiguresToGen2D().size() - 1));
+                        FigureType figureType = FigureType.getFiguresToGen2D().get(number);
                         color = figureType.getDefaultColor();
                     } else {
                         color = FigureType.values()[initData[y][x] - 2].getDefaultColor();
                     }
-                    area.add(new Figure(domain.FigureType.P, new Point(x, ry), FigureOrient.UP, color));
+                    area.add(new Figure(domain.FigureType.P, new Point(x, ry), color));
                 }
             }
         }

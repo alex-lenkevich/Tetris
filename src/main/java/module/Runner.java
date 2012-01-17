@@ -2,7 +2,7 @@ package module;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import domain.*;
+import game.Game2D;
 
 /**
  * User: alexander.lenkevich
@@ -13,8 +13,8 @@ public class Runner {
 
     public static void main(String[] args) {
         Injector injector = Guice.createInjector();
-        Game game = injector.getInstance(Game.class);
-        game.start();
+        Game2D game2D = injector.getInstance(Game2D.class);
+        game2D.start();
     }
 
 }

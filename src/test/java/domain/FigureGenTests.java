@@ -1,5 +1,8 @@
 package domain;
 
+import domainimpl.SimpleArea;
+import domainimpl.SimpleFigureGen;
+import domainimpl.SimpleFigureGen2D;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -15,7 +18,7 @@ public class FigureGenTests {
     @Test
     public void testNewFigure() throws Exception {
         Area area = new SimpleArea();
-        FigureGen figureGen = new SimpleFigureGen();
+        FigureGen figureGen = new SimpleFigureGen2D();
         figureGen.genNewFigure(area);
         assertNotNull(area.getActive());
     }

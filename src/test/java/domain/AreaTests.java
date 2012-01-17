@@ -1,6 +1,7 @@
 package domain;
 
 import com.google.common.collect.ImmutableSet;
+import domainimpl.SimpleArea;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -18,36 +19,36 @@ public class AreaTests {
     public void addingFigure() {
         Area area = new SimpleArea();
 
-        area.add(new Figure(FigureType.P, new Point(0, 0), FigureOrient.UP));
+        area.add(new Figure(FigureType.P, new Point(0, 0)));
 
-        assertEquals(area.getFigures(), ImmutableSet.of(new Figure(FigureType.P, new Point(0, 0), FigureOrient.UP)));
+        assertEquals(area.getFigures(), ImmutableSet.of(new Figure(FigureType.P, new Point(0, 0))));
     }
 
     @Test
     public void removingExistFigure() {
         Area area = new SimpleArea();
 
-        area.add(new Figure(FigureType.P, new Point(0, 0), FigureOrient.UP));
-        area.add(new Figure(FigureType.P, new Point(1, 1), FigureOrient.UP));
-        area.remove(new Figure(FigureType.P, new Point(0, 0), FigureOrient.UP));
+        area.add(new Figure(FigureType.P, new Point(0, 0)));
+        area.add(new Figure(FigureType.P, new Point(1, 1)));
+        area.remove(new Figure(FigureType.P, new Point(0, 0)));
 
-        assertEquals(area.getFigures(), ImmutableSet.of(new Figure(FigureType.P, new Point(1, 1), FigureOrient.UP)));
+        assertEquals(area.getFigures(), ImmutableSet.of(new Figure(FigureType.P, new Point(1, 1))));
     }
 
     @Test
     public void removingNotExistFigure() {
         Area area = new SimpleArea();
 
-        area.add(new Figure(FigureType.P, new Point(0, 0), FigureOrient.UP));
+        area.add(new Figure(FigureType.P, new Point(0, 0)));
 
-        assertEquals(area.getFigures(), ImmutableSet.of(new Figure(FigureType.P, new Point(0, 0), FigureOrient.UP)));
+        assertEquals(area.getFigures(), ImmutableSet.of(new Figure(FigureType.P, new Point(0, 0))));
     }
 
     @Test
     public void fieldContainsTest() {
         Area area = new SimpleArea();
 
-        area.add(new Figure(FigureType.P, new Point(0, 0), FigureOrient.UP));
+        area.add(new Figure(FigureType.P, new Point(0, 0)));
 
         Assert.assertTrue(area.contains(new Point(0, 0)));
         Assert.assertTrue(area.contains(new Point(-1, 0)));
@@ -59,7 +60,7 @@ public class AreaTests {
     public void fieldNotContainsTest() {
         Area area = new SimpleArea();
 
-        area.add(new Figure(FigureType.P, new Point(0, 0), FigureOrient.UP));
+        area.add(new Figure(FigureType.P, new Point(0, 0)));
 
         Assert.assertFalse(area.contains(new Point(1, 0)));
     }
@@ -68,9 +69,9 @@ public class AreaTests {
     public void activeFigureStoreTest() {
         Area area = new SimpleArea();
 
-        area.setActive(new Figure(FigureType.P, new Point(1, 2), FigureOrient.UP));
+        area.setActive(new Figure(FigureType.P, new Point(1, 2)));
 
-        Assert.assertEquals(area.getActive(), new Figure(FigureType.P, new Point(1, 2), FigureOrient.UP));
+        Assert.assertEquals(area.getActive(), new Figure(FigureType.P, new Point(1, 2)));
     }
 
     @Test

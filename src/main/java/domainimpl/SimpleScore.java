@@ -1,4 +1,6 @@
-package domain;
+package domainimpl;
+
+import domain.Score;
 
 /**
  * User: alexander.lenkevich

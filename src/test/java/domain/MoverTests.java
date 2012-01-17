@@ -1,6 +1,7 @@
 package domain;
 
-import com.google.common.collect.ImmutableSet;
+import domainimpl.SimpleArea;
+import domainimpl.SimpleMover;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -12,13 +13,13 @@ import static org.testng.Assert.assertTrue;
  * Date: 1/10/12
  * Time: 8:04 PM
  */
-public class MoverTests {
+public abstract class MoverTests {
 
     @Test
     public void testFall() throws Exception {
         Area area = new SimpleArea();
         Mover mover = new SimpleMover();
-        area.setActive(new Figure(FigureType.P, new Point(1, 1), FigureOrient.UP));
+        area.setActive(new Figure(FigureType.P, new Point(1, 1)));
         assertTrue(mover.fall(area));
         assertEquals(area.getActive().getPosition(), new Point(1, 0));
     }
@@ -27,8 +28,8 @@ public class MoverTests {
     public void testMoveRight() throws Exception {
         Area area = new SimpleArea();
         Mover mover = new SimpleMover();
-        area.setActive(new Figure(FigureType.P, new Point(1, 1), FigureOrient.UP));
-        assertTrue(mover.moveRight(area));
+        area.setActive(new Figure(FigureType.P, new Point(1, 1)));
+        assertTrue(mover.moveWest(area));
         assertEquals(area.getActive().getPosition(), new Point(2, 1));
     }
 
@@ -36,8 +37,8 @@ public class MoverTests {
     public void testMoveLeft() throws Exception {
         Area area = new SimpleArea();
         Mover mover = new SimpleMover();
-        area.setActive(new Figure(FigureType.P, new Point(1, 1), FigureOrient.UP));
-        assertTrue(mover.moveLeft(area));
+        area.setActive(new Figure(FigureType.P, new Point(1, 1)));
+        assertTrue(mover.moveEast(area));
         assertEquals(area.getActive().getPosition(), new Point(0, 1));
     }
 
@@ -46,20 +47,10 @@ public class MoverTests {
         Area area = new SimpleArea();
         Mover mover = new SimpleMover();
 
+        area.add(new Figure(FigureType.O, new Point(1, 1)));
+        area.add(new Figure(FigureType.I, new Point(4, 1), new Projection().rotateRight()));
 
-        //5  LL
-        //4   LI
-        //3   LI
-        //2 OO I
-        //1 OO I
-        //0
-        // 012345
-
-
-        area.add(new Figure(FigureType.O, new Point(1, 1), FigureOrient.UP));
-        area.add(new Figure(FigureType.I, new Point(4, 1), FigureOrient.LEFT));
-
-        area.setActive(new Figure(FigureType.J, new Point(2, 3), FigureOrient.RIGHT));
+        area.setActive(new Figure(FigureType.J, new Point(2, 3), new Projection().rotateLeft()));
 
         assertTrue(mover.fall(area));
         assertEquals(area.getActive().getPosition(), new Point(2, 2));
@@ -75,8 +66,8 @@ public class MoverTests {
     public void testDifMoveRight() throws Exception {
         Area area = new SimpleArea();
         Mover mover = new SimpleMover();
-        area.setActive(new Figure(FigureType.P, new Point(1, 1), FigureOrient.UP));
-        assertTrue(mover.moveRight(area));
+        area.setActive(new Figure(FigureType.P, new Point(1, 1)));
+        assertTrue(mover.moveWest(area));
         assertEquals(area.getActive().getPosition(), new Point(2, 1));
     }
 
@@ -84,8 +75,8 @@ public class MoverTests {
     public void testDifMoveLeft() throws Exception {
         Area area = new SimpleArea();
         Mover mover = new SimpleMover();
-        area.setActive(new Figure(FigureType.P, new Point(1, 1), FigureOrient.UP));
-        assertTrue(mover.moveLeft(area));
+        area.setActive(new Figure(FigureType.P, new Point(1, 1)));
+        assertTrue(mover.moveEast(area));
         assertEquals(area.getActive().getPosition(), new Point(0, 1));
     }
 
@@ -93,18 +84,18 @@ public class MoverTests {
     public void testImpossibleMoveLeftByWall() throws Exception {
         Area area = new SimpleArea();
         Mover mover = new SimpleMover();
-        area.setActive(new Figure(FigureType.P, new Point(0, 1), FigureOrient.UP));
-        assertFalse(mover.moveLeft(area));
+        area.setActive(new Figure(FigureType.P, new Point(0, 1)));
+        assertFalse(mover.moveEast(area));
         assertEquals(area.getActive().getPosition(), new Point(0, 1));
     }
 
     @Test
     public void testImpossibleMoveLeftByFigure() throws Exception {
         Area area = new SimpleArea();
-        area.add(new Figure(FigureType.I, new Point(0, 0), FigureOrient.UP));
+        area.add(new Figure(FigureType.I, new Point(0, 0)));
         Mover mover = new SimpleMover();
-        area.setActive(new Figure(FigureType.P, new Point(1, 1), FigureOrient.UP));
-        assertFalse(mover.moveLeft(area));
+        area.setActive(new Figure(FigureType.P, new Point(1, 1)));
+        assertFalse(mover.moveEast(area));
         assertEquals(area.getActive().getPosition(), new Point(1, 1));
     }
 
@@ -112,18 +103,18 @@ public class MoverTests {
     public void testImpossibleMoveRightByWall() throws Exception {
         Area area = new SimpleArea();
         Mover mover = new SimpleMover();
-        area.setActive(new Figure(FigureType.P, new Point(9, 1), FigureOrient.UP));
-        assertFalse(mover.moveRight(area));
+        area.setActive(new Figure(FigureType.P, new Point(9, 1)));
+        assertFalse(mover.moveWest(area));
         assertEquals(area.getActive().getPosition(), new Point(9, 1));
     }
 
     @Test
     public void testImpossibleMoveRightByFigure() throws Exception {
         Area area = new SimpleArea();
-        area.add(new Figure(FigureType.I, new Point(9, 0), FigureOrient.UP));
+        area.add(new Figure(FigureType.I, new Point(9, 0)));
         Mover mover = new SimpleMover();
-        area.setActive(new Figure(FigureType.P, new Point(8, 1), FigureOrient.UP));
-        assertFalse(mover.moveRight(area));
+        area.setActive(new Figure(FigureType.P, new Point(8, 1)));
+        assertFalse(mover.moveWest(area));
         assertEquals(area.getActive().getPosition(), new Point(8, 1));
     }
 
@@ -131,7 +122,7 @@ public class MoverTests {
     public void testImpossibleFallByWall() throws Exception {
         Area area = new SimpleArea();
         Mover mover = new SimpleMover();
-        area.setActive(new Figure(FigureType.P, new Point(3, 0), FigureOrient.UP));
+        area.setActive(new Figure(FigureType.P, new Point(3, 0)));
         assertFalse(mover.fall(area));
         assertEquals(area.getActive().getPosition(), new Point(3, 0));
     }
@@ -139,9 +130,9 @@ public class MoverTests {
     @Test
     public void testImpossibleFallByFigure() throws Exception {
         Area area = new SimpleArea();
-        area.add(new Figure(FigureType.I, new Point(0, 0), FigureOrient.LEFT));
+        area.add(new Figure(FigureType.I, new Point(0, 0), new Projection().rotateLeft()));
         Mover mover = new SimpleMover();
-        area.setActive(new Figure(FigureType.P, new Point(2, 1), FigureOrient.UP));
+        area.setActive(new Figure(FigureType.P, new Point(2, 1)));
         assertFalse(mover.fall(area));
         assertEquals(area.getActive().getPosition(), new Point(2, 1));
     }

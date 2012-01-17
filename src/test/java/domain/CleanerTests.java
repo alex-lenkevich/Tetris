@@ -1,7 +1,8 @@
 package domain;
 
+import domainimpl.SimpleArea;
+import domainimpl.SimpleCleaner;
 import org.testng.annotations.Test;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -18,17 +19,17 @@ public class CleanerTests {
     public void testFilledRow() throws Exception {
         Cleaner cleaner = new SimpleCleaner();
         Area area = provideArea();
-        area.add(new Figure(FigureType.P, new Point(4, 0), FigureOrient.UP));
-        area.add(new Figure(FigureType.P, new Point(3, 0), FigureOrient.UP));
+        area.add(new Figure(FigureType.P, new Point(4, 0)));
+        area.add(new Figure(FigureType.P, new Point(3, 0)));
         for(int i = 0 ; i < 10 ; i ++){
-            area.add(new Figure(FigureType.P, new Point(i, 1), FigureOrient.UP));
-            area.add(new Figure(FigureType.P, new Point(i, 2), FigureOrient.UP));
+            area.add(new Figure(FigureType.P, new Point(i, 1)));
+            area.add(new Figure(FigureType.P, new Point(i, 2)));
         }
 
-        area.add(new Figure(FigureType.P, new Point(3, 3), FigureOrient.UP));
-        area.add(new Figure(FigureType.P, new Point(5, 4), FigureOrient.UP));
-        area.add(new Figure(FigureType.P, new Point(5, 3), FigureOrient.UP));
-        area.add(new Figure(FigureType.P, new Point(6, 4), FigureOrient.UP));
+        area.add(new Figure(FigureType.P, new Point(3, 3)));
+        area.add(new Figure(FigureType.P, new Point(5, 4)));
+        area.add(new Figure(FigureType.P, new Point(5, 3)));
+        area.add(new Figure(FigureType.P, new Point(6, 4)));
 
         int n = cleaner.clear(area);
 
@@ -55,10 +56,7 @@ public class CleanerTests {
                 {1,1,1,1,1,1,1,1,1,1},
                 {1,1,0,0,1,0,0,1,1,1}
         });
-        System.out.println(area);
-        System.out.println("&&&&&&&&&&&&&&&&&&");
         cleaner.clear(area);
-        System.out.println(area);
         testArea(area, new int[][]{
                 {1,0,0,1,0,0,1,1,1,1},
                 {1,1,0,0,1,0,0,1,1,1}
@@ -84,7 +82,7 @@ public class CleanerTests {
         for(int x = 0 ; x < points.length ; x++){
             for(int y = 0 ; y < points[x].length ; y++){
                 if(points[x][y] != 0){
-                    area.add(new Figure(domain.FigureType.P, new Point(y, x), FigureOrient.UP));
+                    area.add(new Figure(domain.FigureType.P, new Point(y, x)));
                 }
             }
         }
@@ -105,14 +103,11 @@ public class CleanerTests {
     private SimpleArea provideArea() {
         return new SimpleArea(){
             @Override
-            public int getWidth() {
-                return 10;
+            public int getSize(Axis axis) {
+                return axis == Axis.Z ? 1 : 10;
             }
 
-            @Override
-            public int getHeight() {
-                return 10;
-            }
+
         };
     }
 

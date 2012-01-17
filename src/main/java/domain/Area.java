@@ -1,6 +1,7 @@
 package domain;
 
 import com.google.inject.ImplementedBy;
+import domainimpl.SimpleArea;
 
 import java.awt.*;
 import java.util.Set;
@@ -17,6 +18,8 @@ public interface Area {
 
     boolean contains(Point point);
 
+    boolean contains(Point point, Axis... ignoreAxises);
+
     Set<Figure> getFigures();
 
     boolean remove(Figure figure);
@@ -25,14 +28,11 @@ public interface Area {
 
     Figure getActive();
 
-    int getWidth();
+    int getSize(Axis axis);
 
-    int getHeight();
+    void setWidth(int length);
 
-    void setWidth(int w);
+    Color getColorAt(Line line, Direction direction);
 
-    void setHeight(int h);
-
-    Color getColorAt(Point point);
-
+    int getLevel(Line line, Direction direction);
 }

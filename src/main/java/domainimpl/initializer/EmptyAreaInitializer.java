@@ -1,5 +1,7 @@
-package domain;
+package domainimpl.initializer;
 
+import domain.Area;
+import domain.AreaInitializer;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**

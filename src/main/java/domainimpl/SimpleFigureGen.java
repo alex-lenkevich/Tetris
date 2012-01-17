@@ -1,6 +1,6 @@
-package domain;
+package domainimpl;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import domain.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * Date: 1/12/12
  * Time: 12:34 PM
  */
-public class SimpleFigureGen implements FigureGen {
+public abstract class SimpleFigureGen implements FigureGen {
 
     LinkedList<Figure> next = new LinkedList<Figure>();
 
@@ -29,11 +29,13 @@ public class SimpleFigureGen implements FigureGen {
 
     private void genNewNext(Area area) {
         while(next.size() < 3){
-            int number = (int) Math.round(Math.random() * (FigureType.getFiguresToGen().size() - 1));
-            FigureType figureType = FigureType.getFiguresToGen().get(number);
-            Point p = new Point((area.getWidth() - figureType.getRightBottomCorner().x) / 2, area.getHeight());
-            next.addLast(new Figure(figureType, p, FigureOrient.UP));
+            int number = (int) Math.round(Math.random() * (getFiguresToGen().size() - 1));
+            FigureType figureType = getFiguresToGen().get(number);
+            Point p = new Point((area.getSize(Axis.X) - figureType.getRightBottomCorner().x) / 2, area.getSize(Axis.Y));
+            next.addLast(new Figure(figureType, p));
         }
     }
+    
+    protected abstract List<FigureType> getFiguresToGen();
 
 }

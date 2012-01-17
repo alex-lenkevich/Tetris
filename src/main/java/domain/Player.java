@@ -1,13 +1,14 @@
 package domain;
 
 import com.google.inject.ImplementedBy;
+import player.PlayerSwing2D;
 
 /**
  * User: alexander.lenkevich
  * Date: 1/12/12
  * Time: 12:13 PM
  */
-@ImplementedBy(SimplePlayer.class)
+@ImplementedBy(PlayerSwing2D.class)
 public interface Player {
 
     void start();

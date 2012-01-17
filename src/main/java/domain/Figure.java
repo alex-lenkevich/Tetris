@@ -2,8 +2,8 @@ package domain;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 
 import java.awt.*;
 import java.util.Collection;
@@ -19,41 +19,49 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Figure implements Cloneable {
 
     private FigureType type;
-    private FigureOrient orient;
+    private Projection projection;
     private Point position;
     private Color color;
 
     public Figure(FigureType type, Point position) {
-        this(type, position, FigureOrient.UP, type.getDefaultColor());
+        this(type, position, new Projection(), type.getDefaultColor());
     }
 
-    public Figure(FigureType type, Point position, FigureOrient orient) {
-        this(type, position, orient, type.getDefaultColor());
+    public Figure(FigureType type, Point position, Projection projection) {
+        this(type, position, projection, type.getDefaultColor());
     }
 
     public Figure(FigureType type, Point position, Color color) {
-        this(type, position, FigureOrient.UP, color);
+        this(type, position, new Projection(), color);
     }
 
-    public Figure(FigureType type, Point position, FigureOrient orient, Color color) {
+    public Figure(FigureType type, Point position, Projection projection, Color color) {
         checkNotNull(type);
         checkNotNull(position);
-        checkNotNull(orient);
+        checkNotNull(projection);
         checkNotNull(color);
 
-        this.orient = orient;
+        this.projection = projection;
         this.position = position;
         this.type = type;
         this.color = color;
     }
 
-    public boolean contains(Point point) {
-        return Iterables.contains(getPoints(), point);
+    public boolean contains(Point point, Axis... ignoreAxises) {
+        Collection<Axis> axises = Axis.invertAxisList(ignoreAxises);
+        for (Point comparePoint : getPoints()) {
+            boolean equals = true;
+            for (Axis axis : axises) {
+                equals &= comparePoint.getValue(axis) == point.getValue(axis);
+            }
+            if (equals) return true;
+        }
+        return false;
     }
 
     @Override
     public String toString() {
-        return type.toString() + ": " + position.toString() + ":" + orient;
+        return type.toString() + ": " + position.toString() + ":" + projection;
     }
 
     @Override
@@ -75,40 +83,30 @@ public class Figure implements Cloneable {
 
     public Collection<Point> getPoints() {
         Set<Point> points = type.getPoints();
-        switch (orient) {
-            case UP:
-                return ImmutableSet.copyOf(Collections2.transform(points, new Function<Point, Point>() {
-                    @Override
-                    public Point apply(Point point) {
-                        return point.plus(position);
-                    }
-                }));
-            case LEFT:
-                return ImmutableSet.copyOf(Collections2.transform(points, new Function<Point, Point>() {
-                    @Override
-                    public Point apply(Point point) {
-                        Point corn = type.getRightBottomCorner();
-                        return new Point(point.y, corn.x - point.x).plus(position);
-                    }
-                }));
-            case DOWN:
-                return ImmutableSet.copyOf(Collections2.transform(points, new Function<Point, Point>() {
-                    @Override
-                    public Point apply(Point point) {
-                        Point corn = type.getRightBottomCorner();
-                        return new Point(corn.x - point.x, corn.y - point.y).plus(position);
-                    }
-                }));
-            case RIGHT:
-                return ImmutableSet.copyOf(Collections2.transform(points, new Function<Point, Point>() {
-                    @Override
-                    public Point apply(Point point) {
-                        Point corn = type.getRightBottomCorner();
-                        return new Point(corn.y - point.y, point.x).plus(position);
-                    }
-                }));
-        }
-        throw new sun.reflect.generics.reflectiveObjects.NotImplementedException();
+
+        Function<Point, Point> convert = new Function<Point, Point>() {
+            @Override
+            public Point apply(Point point) {
+                Point corn = type.getRightBottomCorner();
+                Point newPoint = new Point(
+                        projection.hWay.getDirection().isForward()
+                        ? point.getValue(projection.hWay.getAxis())
+                        : corn.getValue(projection.hWay.getAxis()) - point.getValue(projection.hWay.getAxis()),
+
+                       projection.vWay.getDirection().isForward()
+                        ? point.getValue(projection.vWay.getAxis())
+                        : corn.getValue(projection.vWay.getAxis()) - point.getValue(projection.vWay.getAxis()),
+
+                        projection.viewWay.getDirection().isForward()
+                        ? point.getValue(projection.viewWay.getAxis())
+                        : corn.getValue(projection.viewWay.getAxis()) - point.getValue(projection.viewWay.getAxis())
+
+                );
+                return newPoint.plus(position);
+            }
+        };
+
+        return ImmutableSet.copyOf(Collections2.transform(points, convert));
     }
 
     public Point getPosition() {
@@ -123,12 +121,12 @@ public class Figure implements Cloneable {
         return type;
     }
 
-    public FigureOrient getOrient() {
-        return orient;
+    public Projection getProjection() {
+        return projection;
     }
 
-    public void setOrient(FigureOrient orient) {
-        this.orient = orient;
+    public void setProjection(Projection projection) {
+        this.projection = projection;
     }
 
     public Color getColor() {
@@ -140,7 +138,7 @@ public class Figure implements Cloneable {
     }
 
     @Override
-    protected Figure clone() {
-        return new Figure(type, position, orient, color);
+    public Figure clone() {
+        return new Figure(type, position, projection, color);
     }
 }

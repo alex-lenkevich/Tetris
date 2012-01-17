@@ -1,6 +1,7 @@
 package domain;
 
 import com.google.inject.ImplementedBy;
+import domainimpl.SimpleMover;
 
 /**
  * User: alexander.lenkevich
@@ -9,16 +10,18 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(SimpleMover.class)
 public interface Mover {
-    boolean moveLeft(Area area);
 
-    boolean moveRight(Area area);
+    boolean moveEast(Area area);
+
+    boolean moveWest(Area area);
+
+    boolean rotate(Area area, Axis axi, Direction direction);
 
     boolean fall(Area area);
 
     void freeze(Area area);
 
-    boolean rotate(Area area);
-
     Figure getDropFigureForecast(final Area area);
 
+    boolean move(final Area area, Axis axis, Direction direction);
 }
